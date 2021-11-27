@@ -17,6 +17,7 @@ import {
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import CityItem from './components/CityItem';
 import CityItemEmpty from './components/CityItemEmpty';
+import envs from './config/env';
 
 const Search = () => {
   const [loading, setLoading] = useState(false);
@@ -25,13 +26,12 @@ const Search = () => {
   const [lonCoords, setLonCoords] = useState('');
   const [filteredCities, setFilteredCities] = useState([]);
   const [search, setSearch] = useState('');
-
-  const API_KEY = '6d42394a6467a3275912ccc02f5bd749';
+  const { REACT_APP_WEATHER_API } = envs;
 
   //ADDING A CITY TO THE LIST
   const handleAddCity = async (query) => {
     setLoading(true);
-    const apiUrl = `http://api.openweathermap.org/data/2.5/weather?q=${query}&appid=${API_KEY}`;
+    const apiUrl = `http://api.openweathermap.org/data/2.5/weather?q=${query}&appid=${process.env.REACT_APP_WEATHER_API}`;
     try {
       const response = await axios.get(apiUrl);
       console.log(response);
