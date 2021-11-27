@@ -1,12 +1,22 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, Modal } from 'react-native';
+import { View, Text, StyleSheet, Modal, Keyboard } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import MapIcon from 'react-native-vector-icons/FontAwesome';
-import { Alert } from 'react-native';
 import Map from '../components/Map';
 
-const CityItem = ({ city, handleDelete, index, lonCoords, latCoords }) => {
+const CityItem = ({
+  city,
+  handleDelete,
+  index,
+  lonCoords,
+  latCoords,
+  setSelectedCity,
+}) => {
   const [modalVisible, setModalVisible] = useState(false);
+
+  const selectCity = (city) => {
+    setSelectedCity(city);
+  };
 
   return (
     <>
@@ -16,7 +26,8 @@ const CityItem = ({ city, handleDelete, index, lonCoords, latCoords }) => {
           transparent={true}
           visible={modalVisible}
           onRequestClose={() => {
-            setModalVisible(false);
+            Keyboard.dismiss();
+            setModalVisible(!modalVisible);
           }}
         >
           <Map
@@ -31,10 +42,14 @@ const CityItem = ({ city, handleDelete, index, lonCoords, latCoords }) => {
           <View style={styles.cityLeft}>
             <View style={styles.cityMap}>
               <MapIcon
+                id={city}
                 name='map-marker'
                 color='black'
                 size={22}
-                onPress={() => setModalVisible(true)}
+                onPress={() => {
+                  selectCity(city);
+                  setModalVisible(true);
+                }}
               />
             </View>
             <Text style={styles.cityText}>{city}</Text>

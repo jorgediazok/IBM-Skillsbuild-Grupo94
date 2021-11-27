@@ -2,7 +2,10 @@ import * as React from 'react';
 import MapView, { Marker } from 'react-native-maps';
 import { StyleSheet, View, Dimensions } from 'react-native';
 
-export default function Map({ lonCoords, latCoords, index }) {
+export default function Map({ lonCoords, latCoords }) {
+  console.log(lonCoords);
+  console.log(latCoords);
+
   return (
     <View style={styles.container}>
       <MapView

@@ -1,16 +1,14 @@
-import React, { useEffect, useState, useMemo } from 'react';
+import React, { useState } from 'react';
 
 //AXIOS
 import axios from 'axios';
 
-import { TextInput } from 'react-native-paper';
 import {
-  KeyboardAvoidingView,
+  TextInput,
   StyleSheet,
+  Keyboard,
   View,
   Text,
-  TouchableOpacity,
-  ScrollView,
   ActivityIndicator,
   Alert,
 } from 'react-native';
@@ -22,50 +20,93 @@ import envs from './config/env';
 const Search = () => {
   const [loading, setLoading] = useState(false);
   const [cityItems, setCityItems] = useState([]);
-  const [latCoords, setLatCoords] = useState('');
-  const [lonCoords, setLonCoords] = useState('');
-  const [filteredCities, setFilteredCities] = useState([]);
+  const [locations, setLocations] = useState({});
+  const [filteredCities, setFilteredCities] = useState(null);
   const [search, setSearch] = useState('');
+  const [newCityText, setNewCityText] = useState('');
+  const [selectedCity, setSelectedCity] = useState('');
   const { REACT_APP_WEATHER_API } = envs;
 
   //ADDING A CITY TO THE LIST
-  const handleAddCity = async (query) => {
+  const handleAddCity = async () => {
     setLoading(true);
-    const apiUrl = `http://api.openweathermap.org/data/2.5/weather?q=${query}&appid=${process.env.REACT_APP_WEATHER_API}`;
+    const apiUrl = `http://api.openweathermap.org/data/2.5/weather?q=${newCityText}&appid=${process.env.REACT_APP_WEATHER_API}`;
     try {
       const response = await axios.get(apiUrl);
-      console.log(response);
       setCityItems([...cityItems, response.data.name]);
-      setLatCoords(response.data.coord.lat);
-      setLonCoords(response.data.coord.lon);
-      setSearch('');
+      setLocations({
+        ...locations,
+        [response.data.name]: {
+          lat: response.data.coord.lat,
+          lon: response.data.coord.lon,
+        },
+      });
+      setNewCityText('');
     } catch (error) {
       Alert.alert('Error.', 'La ciudad no existe.', [
         { text: 'OK', onPress: () => console.log('OK Pressed') },
       ]);
-      setSearch('');
+      setNewCityText('');
     }
     setLoading(false);
   };
 
-  console.log(cityItems);
+  //RENDERING
+  const renderItems = () => {
+    if (cityItems.length === 0) {
+      return <CityItemEmpty />;
+    }
+
+    if (filteredCities && filteredCities.length === 0) {
+      return <CityItemEmpty />;
+    }
+
+    if (filteredCities && filteredCities.length > 0) {
+      return filteredCities
+        .map((cityItem, index) => (
+          <CityItem
+            city={cityItem}
+            key={index}
+            lonCoords={locations[selectedCity]?.lon}
+            latCoords={locations[selectedCity]?.lat}
+            handleDelete={handleDelete}
+            index={index}
+            setSelectedCity={setSelectedCity}
+          />
+        ))
+        .reverse();
+    }
+
+    return cityItems
+      .map((cityItem, index) => (
+        <CityItem
+          city={cityItem}
+          key={index}
+          lonCoords={locations[selectedCity]?.lon}
+          latCoords={locations[selectedCity]?.lat}
+          handleDelete={handleDelete}
+          index={index}
+          setSelectedCity={setSelectedCity}
+        />
+      ))
+      .reverse();
+  };
 
   //FILTERING CITIES
-  const handleSearch = (text) => {
-    if (text) {
-      const newData = cityItems?.filter((item) => {
-        const itemData = item.title
-          ? item.title.toUpperCase()
-          : ''.toUpperCase();
-        const textData = text.toUpperCase();
-        return itemData.indexOf(textData) > -1;
-      });
-      setFilteredCities(newData);
-      setSearch(text);
+  const handleSearch = (text, index) => {
+    if (text.length >= 2) {
+      setFilteredCities(
+        cityItems.filter((city) => {
+          return (
+            city.charAt(index).toLowerCase() ===
+            text.charAt(index).toLowerCase()
+          );
+        })
+      );
     } else {
-      setFilteredCities(cityItems);
-      setSearch(text);
+      setFilteredCities(null);
     }
+    setSearch(text);
   };
 
   //DELETING A CITY
@@ -77,21 +118,57 @@ const Search = () => {
 
   return (
     <View style={styles.container}>
-      <Ionicons name='location-sharp' size={22} style={styles.iconOne} />
-      <KeyboardAvoidingView style={styles.addCitiesWrapper}>
+      <View
+        style={{
+          flexDirection: 'row',
+          alignItems: 'center',
+          justifyContent: 'center',
+          marginTop: 50,
+          width: '90%',
+          marginLeft: 15,
+        }}
+      >
+        <Ionicons
+          name='add-outline'
+          size={22}
+          style={styles.iconOne}
+          color='grey'
+          onPress={() => {
+            handleAddCity();
+            Keyboard.dismiss();
+          }}
+        />
+
         <TextInput
           style={styles.textInputStyle}
           placeholder='Agregar ciudad'
+          value={newCityText}
+          autoFocus
+          underlineColorAndroid='transparent'
+          onChangeText={(text) => setNewCityText(text)}
+        />
+      </View>
+
+      <View
+        style={{
+          flexDirection: 'row',
+          alignItems: 'center',
+          justifyContent: 'center',
+          marginTop: 20,
+          width: '90%',
+          marginLeft: 15,
+        }}
+      >
+        <Ionicons name='search' size={22} style={styles.iconOne} color='grey' />
+
+        <TextInput
+          style={styles.textInputStyle}
+          placeholder='Buscar ciudad'
           value={search}
           underlineColorAndroid='transparent'
           onChangeText={(text) => handleSearch(text)}
         />
-        <TouchableOpacity onPress={() => handleAddCity(search)}>
-          <View style={styles.addButtonWrapper}>
-            <Text style={styles.addButton}>+</Text>
-          </View>
-        </TouchableOpacity>
-      </KeyboardAvoidingView>
+      </View>
 
       <Text style={styles.title}>Tus Ciudades</Text>
       {loading ? (
@@ -101,24 +178,7 @@ const Search = () => {
           color='#0000ff'
         />
       ) : (
-        <View style={styles.addedCities}>
-          {cityItems.length === 0 ? (
-            <CityItemEmpty />
-          ) : (
-            cityItems
-              .map((cityItem, index) => (
-                <CityItem
-                  city={cityItem}
-                  key={index}
-                  lonCoords={lonCoords}
-                  latCoords={latCoords}
-                  handleDelete={handleDelete}
-                  index={index}
-                />
-              ))
-              .reverse()
-          )}
-        </View>
+        <View style={styles.addedCities}>{renderItems()}</View>
       )}
     </View>
   );
@@ -126,8 +186,10 @@ const Search = () => {
 
 export default Search;
 
+//STYLES
 const styles = StyleSheet.create({
   container: {
+    padding: 10,
     flex: 1,
     backgroundColor: '#E8EAED',
     marginTop: 20,
@@ -136,16 +198,8 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: 'bold',
     textAlign: 'center',
-    marginTop: 120,
+    marginTop: 30,
     zIndex: 300,
-  },
-  addCitiesWrapper: {
-    position: 'absolute',
-    top: 10,
-    width: '100%',
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    alignItems: 'center',
   },
   addedCities: {
     paddingTop: 30,
@@ -155,18 +209,17 @@ const styles = StyleSheet.create({
   iconOne: {
     position: 'absolute',
     zIndex: 1,
-    top: 58,
-    left: 25,
+    top: 8,
+    left: '87%',
   },
   textInputStyle: {
+    position: 'relative',
+    width: '100%',
+    flex: 1,
     height: 40,
     borderWidth: 1,
     borderRadius: 5,
-    paddingLeft: 30,
-    margin: 5,
-    width: '75%',
-    marginLeft: 15,
-    marginTop: 40,
+    paddingLeft: 10,
     borderColor: '#009688',
     backgroundColor: 'white',
   },
@@ -179,8 +232,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderColor: '#C0C0C0',
     borderWidth: 1,
-    marginTop: 32,
-    marginRight: 15,
+    marginLeft: 5,
   },
   addButton: {
     fontWeight: 'bold',
