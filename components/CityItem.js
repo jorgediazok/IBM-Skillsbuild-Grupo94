@@ -3,7 +3,7 @@ import { View, Text, StyleSheet } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import MapIcon from 'react-native-vector-icons/FontAwesome';
 
-const CityItem = ({ city, handleDelete, index }) => {
+const CityItem = ({ city, handleDelete, index, handleSearch, fetchCities }) => {
   return (
     <View style={styles.city}>
       <View style={styles.cityLeft}>

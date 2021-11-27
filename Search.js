@@ -1,4 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
+
+//AXIOS
+import axios from 'axios';
+
+//DEBOUNCE TO CONTROL EXCESS OF API REQUESTS
+import debounce from 'lodash';
+
 import { TextInput, Button } from 'react-native-paper';
 import {
   FlatList,
@@ -14,61 +21,36 @@ import CityItem from './components/CityItem';
 import CityItemEmpty from './components/CityItemEmpty';
 
 const Search = () => {
-  const [city, setCity] = useState('');
   const [cityItems, setCityItems] = useState([]);
   const [filteredCities, setFilteredCities] = useState([]);
-  const [masterData, setMasterData] = useState([]);
   const [search, setSearch] = useState('');
 
-  // const fetchCities = async (text) => {
-  //   setCity(text);
-  //   const response = await axios.get(
-  //     'https://autocomplete.wunderground.com/aq?query=' + text
-  //   );
-  // };
+  const API_KEY = '6d42394a6467a3275912ccc02f5bd749';
 
-  // const fetchPosts = () => {
-  //   const apiUrl = 'https://jsonplaceholder.typicode.com/posts';
-  //   fetch(apiUrl)
-  //     .then((response) => response.json())
-  //     .then((responseJson) => {
-  //       setFilteredCities(responseJson);
-  //       setMasterData(responseJson);
-  //     })
-  //     .catch((err) => console.log(err));
-  // };
+  const fetchCities = async (query) => {
+    const apiUrl = `http://api.openweathermap.org/data/2.5/weather?q=${query}&appid=${API_KEY}`;
+    const response = await axios.get(apiUrl);
+    console.log(response);
+    setCityItems([...cityItems, response.data.name]);
+    setSearch('');
+  };
 
-  // useEffect(() => {
-  //   fetchPosts();
-  //   return () => {};
-  // }, []);
+  useEffect(() => {
+    fetchCities('Madrid');
+  }, []);
 
-  // const ItemView = ({ item }) => {
-  //   return (
-  //     <View style={{ width: '80%', marginLeft: 35 }}>
-  //       <Text style={styles.itemStyle}>
-  //         {item.id}
-  //         {'. '}
-  //         {item.title.toUpperCase()}
-  //       </Text>
-  //       <Button mode='contained' onPress={() => alert('Clickeaste')}>
-  //         +
-  //       </Button>
-  //     </View>
-  //   );
-  // };
-
-  //ADDING A CITY
-  const handleAddCity = () => {
+  // ADDING A CITY
+  const handleAddCity = (query) => {
     Keyboard.dismiss();
-    setCityItems([...cityItems, city]);
-    setCity('');
+    fetchCities(query);
+    setCityItems([...cityItems, search]);
+    setSearch('');
   };
 
   //FILTERING CITIES
-  const searchFilter = (text) => {
+  const handleSearch = (text) => {
     if (text) {
-      const newData = masterData.filter((item) => {
+      const newData = cityItems?.filter((item) => {
         const itemData = item.title
           ? item.title.toUpperCase()
           : ''.toUpperCase();
@@ -78,7 +60,7 @@ const Search = () => {
       setFilteredCities(newData);
       setSearch(text);
     } else {
-      setFilteredCities(masterData);
+      setFilteredCities(cityItems);
       setSearch(text);
     }
   };
@@ -97,11 +79,11 @@ const Search = () => {
         <TextInput
           style={styles.textInputStyle}
           placeholder='Agregar ciudad'
-          // value={search}
-          value={city}
+          value={search}
+          // value={city}
           underlineColorAndroid='transparent'
-          // onChangeText={(text) => searchFilter(text)}
-          onChangeText={(text) => setCity(text)}
+          onChangeText={(text) => handleSearch(text)}
+          // onChangeText={(text) => setCity(text)}
         />
         <TouchableOpacity onPress={() => handleAddCity()}>
           <View style={styles.addButtonWrapper}>
@@ -111,10 +93,10 @@ const Search = () => {
       </KeyboardAvoidingView>
 
       {/* <FlatList
-          data={filteredCities}
-          keyExtractor={(item, index) => index.toString()}
-          renderItem={ItemView}
-        /> */}
+        data={filteredCities}
+        keyExtractor={(item, index) => index.toString()}
+        renderItem={CityItem}
+      /> */}
 
       <Text style={styles.title}>Tus Ciudades</Text>
       <View style={styles.addedCities}>
