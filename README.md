@@ -1,8 +1,9 @@
 
 # IBM SKILLSBUILD Proyecto Grupal
-    Este proyecto fue desarrollado para el curso de React de Codo a Codo en acompañamiento con IBM.
 
-    Proyecto Mural [node.js]: <https://app.mural.co/embed/a4ae7a8f-5f0f-466c-85fd-2d91f31a3af8>
+Este proyecto fue desarrollado para el curso de React de Codo a Codo en acompañamiento con IBM.
+
+Proyecto Mural [node.js]: <https://app.mural.co/embed/a4ae7a8f-5f0f-466c-85fd-2d91f31a3af8>
 
 ## Introducción
 Esta es una aplicación que consume un servicio del clima y permite agregar ciudades a un listado. Esa información puede ser visualizada en un mapa. Cuando el usuario selecciona una ciudad se desplega la temperatura del lugar.
