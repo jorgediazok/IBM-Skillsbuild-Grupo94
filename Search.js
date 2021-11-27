@@ -10,6 +10,7 @@ import {
   View,
   Text,
   TouchableOpacity,
+  ScrollView,
   ActivityIndicator,
   Alert,
 } from 'react-native';
@@ -20,22 +21,25 @@ import CityItemEmpty from './components/CityItemEmpty';
 const Search = () => {
   const [loading, setLoading] = useState(false);
   const [cityItems, setCityItems] = useState([]);
+  const [latCoords, setLatCoords] = useState('');
+  const [lonCoords, setLonCoords] = useState('');
   const [filteredCities, setFilteredCities] = useState([]);
   const [search, setSearch] = useState('');
 
   const API_KEY = '6d42394a6467a3275912ccc02f5bd749';
 
-  //ADDING A CITY TO LIST
-
+  //ADDING A CITY TO THE LIST
   const handleAddCity = async (query) => {
     setLoading(true);
     const apiUrl = `http://api.openweathermap.org/data/2.5/weather?q=${query}&appid=${API_KEY}`;
     try {
       const response = await axios.get(apiUrl);
+      console.log(response);
       setCityItems([...cityItems, response.data.name]);
+      setLatCoords(response.data.coord.lat);
+      setLonCoords(response.data.coord.lon);
       setSearch('');
     } catch (error) {
-      console.log(error);
       Alert.alert('Error.', 'La ciudad no existe.', [
         { text: 'OK', onPress: () => console.log('OK Pressed') },
       ]);
@@ -106,6 +110,8 @@ const Search = () => {
                 <CityItem
                   city={cityItem}
                   key={index}
+                  lonCoords={lonCoords}
+                  latCoords={latCoords}
                   handleDelete={handleDelete}
                   index={index}
                 />

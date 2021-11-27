@@ -1,7 +1,11 @@
 import * as React from 'react';
-import { View } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
 import Search from './Search';
 
 export default function App() {
-  return <Search />;
+  return (
+    <NavigationContainer>
+      <Search />
+    </NavigationContainer>
+  );
 }
