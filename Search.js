@@ -3,49 +3,48 @@ import React, { useEffect, useState, useMemo } from 'react';
 //AXIOS
 import axios from 'axios';
 
-//DEBOUNCE TO CONTROL EXCESS OF API REQUESTS
-import debounce from 'lodash';
-
-import { TextInput, Button } from 'react-native-paper';
+import { TextInput } from 'react-native-paper';
 import {
-  FlatList,
   KeyboardAvoidingView,
   StyleSheet,
   View,
   Text,
   TouchableOpacity,
-  Keyboard,
+  ActivityIndicator,
+  Alert,
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import CityItem from './components/CityItem';
 import CityItemEmpty from './components/CityItemEmpty';
 
 const Search = () => {
+  const [loading, setLoading] = useState(false);
   const [cityItems, setCityItems] = useState([]);
   const [filteredCities, setFilteredCities] = useState([]);
   const [search, setSearch] = useState('');
 
   const API_KEY = '6d42394a6467a3275912ccc02f5bd749';
 
-  const fetchCities = async (query) => {
+  //ADDING A CITY TO LIST
+
+  const handleAddCity = async (query) => {
+    setLoading(true);
     const apiUrl = `http://api.openweathermap.org/data/2.5/weather?q=${query}&appid=${API_KEY}`;
-    const response = await axios.get(apiUrl);
-    console.log(response);
-    setCityItems([...cityItems, response.data.name]);
-    setSearch('');
+    try {
+      const response = await axios.get(apiUrl);
+      setCityItems([...cityItems, response.data.name]);
+      setSearch('');
+    } catch (error) {
+      console.log(error);
+      Alert.alert('Error.', 'La ciudad no existe.', [
+        { text: 'OK', onPress: () => console.log('OK Pressed') },
+      ]);
+      setSearch('');
+    }
+    setLoading(false);
   };
 
-  useEffect(() => {
-    fetchCities('Madrid');
-  }, []);
-
-  // ADDING A CITY
-  const handleAddCity = (query) => {
-    Keyboard.dismiss();
-    fetchCities(query);
-    setCityItems([...cityItems, search]);
-    setSearch('');
-  };
+  console.log(cityItems);
 
   //FILTERING CITIES
   const handleSearch = (text) => {
@@ -80,41 +79,41 @@ const Search = () => {
           style={styles.textInputStyle}
           placeholder='Agregar ciudad'
           value={search}
-          // value={city}
           underlineColorAndroid='transparent'
           onChangeText={(text) => handleSearch(text)}
-          // onChangeText={(text) => setCity(text)}
         />
-        <TouchableOpacity onPress={() => handleAddCity()}>
+        <TouchableOpacity onPress={() => handleAddCity(search)}>
           <View style={styles.addButtonWrapper}>
             <Text style={styles.addButton}>+</Text>
           </View>
         </TouchableOpacity>
       </KeyboardAvoidingView>
 
-      {/* <FlatList
-        data={filteredCities}
-        keyExtractor={(item, index) => index.toString()}
-        renderItem={CityItem}
-      /> */}
-
       <Text style={styles.title}>Tus Ciudades</Text>
-      <View style={styles.addedCities}>
-        {cityItems.length === 0 ? (
-          <CityItemEmpty />
-        ) : (
-          cityItems
-            .map((cityItem, index) => (
-              <CityItem
-                city={cityItem}
-                key={index}
-                handleDelete={handleDelete}
-                index={index}
-              />
-            ))
-            .reverse()
-        )}
-      </View>
+      {loading ? (
+        <ActivityIndicator
+          style={{ flex: 1, justifyContent: 'center' }}
+          size='large'
+          color='#0000ff'
+        />
+      ) : (
+        <View style={styles.addedCities}>
+          {cityItems.length === 0 ? (
+            <CityItemEmpty />
+          ) : (
+            cityItems
+              .map((cityItem, index) => (
+                <CityItem
+                  city={cityItem}
+                  key={index}
+                  handleDelete={handleDelete}
+                  index={index}
+                />
+              ))
+              .reverse()
+          )}
+        </View>
+      )}
     </View>
   );
 };
@@ -125,6 +124,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#E8EAED',
+    marginTop: 20,
   },
   title: {
     fontSize: 20,
