@@ -5,7 +5,7 @@ import Styles from '../../components/Styles';
 import StylesButton from '../../components/SylesButton';
 import * as Location from 'expo-location';
 
-import Cities from '../Cities/Cities';
+import Cities from '../ListCities/Search';
 import Nosotros from '../Nosotros/Nosotros';
 import DateTime from '../../components/CurrentDate/DateTime';
 import WeatherScroll from '../../components/CurrentDate/WeatherScroll';
