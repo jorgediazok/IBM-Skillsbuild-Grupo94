@@ -115,23 +115,6 @@ console.log(city);
               onPress={() => handleDelete(index)}
             />
           </View>
-
-          <View style={styles.cityDelete}>
-            
-            <Icon
-            name='heartbeat'
-            size={20}
-            color='#900'
-            onPress={() => {
-              fetchWeatherData(city);
-              Keyboard.dismiss();
-              console.log(weatherData);
-              console.log('weata');
-            }}
-            
-          />
-          
-        </View>
         
 
         </View>
