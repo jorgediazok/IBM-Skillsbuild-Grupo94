@@ -33,7 +33,7 @@ export default function App() {
           <Stack.Screen
             name='Nosotros'
             component={Nosotros}
-            options={{ title: 'Nosotros' }}
+            options={{ title: 'Quiénes Somos' }}
           />
         </Stack.Navigator>
       </NavigationContainer>
