@@ -13,9 +13,9 @@ import {
   Alert,
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import CityItem from './components/CityItem';
-import CityItemEmpty from './components/CityItemEmpty';
-import envs from './config/env';
+import CityItem from '../../components/CityItem';
+import CityItemEmpty from '../../components/CityItemEmpty';
+import envs from '../../config/env';
 
 const Search = () => {
   const [loading, setLoading] = useState(false);
@@ -192,7 +192,6 @@ const styles = StyleSheet.create({
     padding: 10,
     flex: 1,
     backgroundColor: '#E8EAED',
-    marginTop: 20,
   },
   title: {
     fontSize: 20,
