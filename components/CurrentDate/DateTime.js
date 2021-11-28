@@ -25,6 +25,7 @@ const months = [
   'Nov',
   'Dec',
 ];
+import { ActivityIndicator } from 'react-native';
 
 const WeatherItem = ({ title, value, unit }) => {
   return (
@@ -114,11 +115,22 @@ const DateTime = ({ current, lat, lon, timezone }) => {
       </View>
     );
   return (
-    <View>
-      <Text style={styles.textApp}>
-        Se encuentra vacía la Lista de Ciudades. Vuelva a Home y cargue nuevas
-        ciudades.
-      </Text>
+    <View
+      style={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+      }}
+    >
+      <ActivityIndicator
+        style={{
+          flex: 1,
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}
+        size='large'
+        color='#0000ff'
+      />
     </View>
   );
 };
@@ -184,9 +196,9 @@ const styles = StyleSheet.create({
     marginRight: -20,
   },
   textApp: {
-    color: 'black',
-    fontSize: 30,
-    marginLeft: 15,
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 

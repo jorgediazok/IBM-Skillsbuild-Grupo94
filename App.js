@@ -5,7 +5,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 import Home from './screens/Home/Home';
-import ListCities from './screens/Search/Search';
+import ListCities from './screens/ListCities/Search';
 import Nosotros from './screens/Nosotros/Nosotros';
 
 const Stack = createNativeStackNavigator();
@@ -26,9 +26,9 @@ export default function App() {
             options={{ title: 'Clima Ahora' }}
           />
           <Stack.Screen
-            name='Cities'
+            name='Search'
             component={ListCities}
-            options={{ title: 'Ciudades' }}
+            options={{ title: 'Tus Ciudades' }}
           />
           <Stack.Screen
             name='Nosotros'
