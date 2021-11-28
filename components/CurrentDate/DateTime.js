@@ -30,7 +30,7 @@ const WeatherItem = ({ title, value, unit }) => {
   return (
     <View style={styles.weatherItem}>
       <Text style={styles.weatherItemTitle}>{title}</Text>
-      <Text style={styles.weatherItemTitle}>
+      <Text style={styles.weatherItemTitleRight}>
         {value}
         {unit}
       </Text>
@@ -126,7 +126,6 @@ const DateTime = ({ current, lat, lon, timezone }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1.2,
-    // flexDirection: 'row',
     justifyContent: 'space-between',
   },
   heading: {
@@ -152,10 +151,9 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     justifyContent: 'center',
     textAlign: 'center',
-    marginLeft: 32,
   },
   latlong: {
-    marginLeft: 76,
+    marginLeft: 56,
     fontSize: 16,
     color: 'white',
     fontWeight: '700',
@@ -167,7 +165,6 @@ const styles = StyleSheet.create({
     marginTop: 10,
     width: 250,
     justifyContent: 'center',
-    marginLeft: 30,
   },
   weatherItem: {
     flexDirection: 'row',
@@ -179,6 +176,12 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: '100',
     marginLeft: 10,
+  },
+  weatherItemTitleRight: {
+    color: '#eee',
+    fontSize: 14,
+    fontWeight: '100',
+    marginRight: -20,
   },
   textApp: {
     color: 'black',
