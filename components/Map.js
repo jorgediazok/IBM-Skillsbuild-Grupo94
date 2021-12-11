@@ -25,14 +25,13 @@ export default function Map({ lonCoords, latCoords }) {
 
 const styles = StyleSheet.create({
   container: {
-   
     backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
   },
 
   map: {
-    width: 20,
-    height: 20,
+    width: Dimensions.get('window').width,
+    height: Dimensions.get('window').height,
   },
 });

@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 //AXIOS
 import axios from 'axios';
 
@@ -26,7 +25,7 @@ const Search = () => {
   const [newCityText, setNewCityText] = useState('');
   const [selectedCity, setSelectedCity] = useState('');
   const { REACT_APP_WEATHER_API } = envs;
-  const API_KEY = "df9cb797703364f9c6cdde8025ca1416";
+  const API_KEY = 'df9cb797703364f9c6cdde8025ca1416';
   //ADDING A CITY TO THE LIST
   const handleAddCity = async () => {
     setLoading(true);
@@ -41,8 +40,7 @@ const Search = () => {
           lon: response.data.coord.lon,
         },
       });
-      
-      
+
       setNewCityText('');
     } catch (error) {
       Alert.alert('Error.', 'La ciudad no existe.', [
