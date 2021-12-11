@@ -113,26 +113,28 @@ const CityItem = ({
           <Text style={styles.cityText}>{city}</Text>
         </View>
 
-        <View style={styles.cityMap}>
-          <MapIcon
-            id={city}
-            name='map-marker'
-            color='black'
-            size={20}
-            onPress={() => {
-              selectCity(city);
-              setModalMapVisible(true);
-            }}
-          />
-        </View>
+        <View style={styles.cityRight}>
+          <View style={styles.cityMap}>
+            <MapIcon
+              id={city}
+              name='map-marker'
+              color='black'
+              size={20}
+              onPress={() => {
+                selectCity(city);
+                setModalMapVisible(true);
+              }}
+            />
+          </View>
 
-        <View style={styles.cityDelete}>
-          <Icon
-            name='trash'
-            size={20}
-            color='#900'
-            onPress={() => handleDelete(index)}
-          />
+          <View style={styles.cityDelete}>
+            <Icon
+              name='trash'
+              size={20}
+              color='#900'
+              onPress={() => handleDelete(index)}
+            />
+          </View>
         </View>
       </View>
     </>
@@ -157,6 +159,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flexWrap: 'wrap',
   },
+  cityRight: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    flexDirection: 'row',
+  },
   cityInfo: {
     width: 24,
     height: 24,
@@ -170,8 +178,8 @@ const styles = StyleSheet.create({
     height: 24,
     opacity: 0.4,
     borderRadius: 5,
-    marginLeft: 110,
-    paddingTop: 1,
+    paddingTop: 2,
+    marginRight: 5,
   },
   cityText: {
     maxWidth: '80%',
