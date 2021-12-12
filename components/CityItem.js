@@ -46,7 +46,6 @@ const CityItem = ({
 
   function closeUp() {
     alVisible = false;
-    console.log(alVisible);
   }
 
   if (weatherData != null) {
@@ -183,6 +182,7 @@ const styles = StyleSheet.create({
   },
   cityText: {
     maxWidth: '80%',
+    fontWeight: 'bold',
   },
   cityDelete: {
     width: 22,
