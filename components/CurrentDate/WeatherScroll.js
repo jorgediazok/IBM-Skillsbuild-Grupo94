@@ -26,7 +26,7 @@ const CurrentTempEl = ({ data }) => {
         <View style={styles.otherContainer}>
           <Text style={styles.day}>
             {moment(data.dt * 1000)
-              .locale('es')
+              .locale('es-ES')
               .format('dddd')}
           </Text>
           <Text style={styles.temp}>Día - {data.temp.day}&#176;C</Text>
