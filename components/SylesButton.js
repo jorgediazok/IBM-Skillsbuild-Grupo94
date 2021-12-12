@@ -64,6 +64,7 @@ const StylesButton = StyleSheet.create({
     borderRadius: 70,
     bottom: 5,
     left: 10,
+    marginTop: 10,
   },
   btnCities: {
     shadowColor: '#000',

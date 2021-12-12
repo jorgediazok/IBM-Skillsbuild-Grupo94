@@ -25,10 +25,12 @@ const CurrentTempEl = ({ data }) => {
         <Image source={img} style={styles.image} />
         <View style={styles.otherContainer}>
           <Text style={styles.day}>
-            {moment(data.dt * 1000).format('dddd')}
+            {moment(data.dt * 1000)
+              .locale('es')
+              .format('dddd')}
           </Text>
-          <Text style={styles.temp}>Night - {data.temp.night}&#176;C</Text>
-          <Text style={styles.temp}>Day - {data.temp.day}&#176;C</Text>
+          <Text style={styles.temp}>Día - {data.temp.day}&#176;C</Text>
+          <Text style={styles.temp}>Noche - {data.temp.night}&#176;C</Text>
         </View>
       </View>
     );
@@ -69,12 +71,14 @@ const styles = StyleSheet.create({
     borderRadius: 50,
     fontWeight: '200',
     marginBottom: 15,
+    textTransform: 'capitalize',
   },
   temp: {
     fontSize: 16,
     color: 'white',
     fontWeight: '100',
     textAlign: 'center',
+    textTransform: 'capitalize',
   },
   otherContainer: {
     paddingRight: 40,

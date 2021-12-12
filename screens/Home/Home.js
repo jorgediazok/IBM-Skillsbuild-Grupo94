@@ -10,7 +10,7 @@ import Nosotros from '../Nosotros/Nosotros';
 import DateTime from '../../components/CurrentDate/DateTime';
 import WeatherScroll from '../../components/CurrentDate/WeatherScroll';
 const API_KEY = '8fbf7d93eaa27eae0f86b576e3a148d2';
-const img = require('../../assets/CiudadMain.jpg');
+const img = require('../../assets/citydark.jpg');
 
 const Home = ({ navigation }) => {
   const [dataDateTime, setDataDateTime] = useState({});
@@ -36,6 +36,7 @@ const Home = ({ navigation }) => {
         .then((res) => res.json())
         .then((data) => {
           setDataDateTime(data);
+          console.log(data);
         });
     }
   };
@@ -62,7 +63,7 @@ const Home = ({ navigation }) => {
             <Icon
               name='account-multiple'
               size={30}
-              color='#E5097F'
+              color='#FFF'
               onPress={() => navigation.navigate(Nosotros)}
             />
           </TouchableOpacity>
@@ -70,7 +71,7 @@ const Home = ({ navigation }) => {
             <Icon
               name='home-city'
               size={30}
-              color='#E5097F'
+              color='#FFF'
               onPress={() => navigation.navigate(Cities)}
             />
           </TouchableOpacity>

@@ -3,27 +3,27 @@ import { View, Text, StyleSheet } from 'react-native';
 import moment from 'moment-timezone';
 
 const days = [
-  'Sunday',
-  'Monday',
-  'Tuesday',
-  'Wednesday',
-  'Thursday',
-  'Friday',
-  'Saturday',
+  'Domingo',
+  'Lunes',
+  'Martes',
+  'Miércoles',
+  'Jueves',
+  'Viernes',
+  'Sábado',
 ];
 const months = [
-  'Jan',
+  'Ene',
   'Feb',
   'Mar',
-  'Apr',
+  'Abr',
   'May',
   'Jun',
   'Jul',
-  'Aug',
+  'Ago',
   'Sep',
   'Oct',
   'Nov',
-  'Dec',
+  'Dic',
 ];
 import { ActivityIndicator } from 'react-native';
 
@@ -52,13 +52,11 @@ const DateTime = ({ current, lat, lon, timezone }) => {
       const hour = time.getHours();
       const hoursIn12HrFormat = hour >= 13 ? hour % 12 : hour;
       const minutes = time.getMinutes();
-      const ampm = hour >= 12 ? 'pm' : 'am';
 
       setTime(
         (hoursIn12HrFormat < 10 ? '0' + hoursIn12HrFormat : hoursIn12HrFormat) +
           ':' +
-          (minutes < 10 ? '0' + minutes : minutes) +
-          ampm
+          (minutes < 10 ? '0' + minutes : minutes)
       );
 
       setDate(days[day] + ', ' + date + ' ' + months[month]);
@@ -77,17 +75,17 @@ const DateTime = ({ current, lat, lon, timezone }) => {
           </View>
           <View style={styles.weatherItemContainer}>
             <WeatherItem
-              title='Humidity'
+              title='Humedad'
               value={current ? current.humidity : ''}
               unit='%'
             />
             <WeatherItem
-              title='Pressure'
+              title='Presión'
               value={current ? current.pressure : ''}
               unit='hPA'
             />
             <WeatherItem
-              title='Sunrise'
+              title='Amanece'
               value={
                 current
                   ? moment.tz(current.sunrise * 1000, timezone).format('HH:mm')
@@ -96,7 +94,7 @@ const DateTime = ({ current, lat, lon, timezone }) => {
               unit='am'
             />
             <WeatherItem
-              title='Sunset'
+              title='Anochece'
               value={
                 current
                   ? moment.tz(current.sunset * 1000, timezone).format('HH:mm')
@@ -137,7 +135,7 @@ const DateTime = ({ current, lat, lon, timezone }) => {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1.2,
+    flex: 1.4,
     justifyContent: 'space-between',
   },
   heading: {
@@ -145,6 +143,7 @@ const styles = StyleSheet.create({
     fontSize: 45,
     color: 'white',
     fontWeight: '100',
+    marginTop: 10,
   },
   subheading: {
     textAlign: 'center',
