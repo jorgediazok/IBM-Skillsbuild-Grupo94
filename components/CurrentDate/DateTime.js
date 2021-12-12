@@ -106,7 +106,7 @@ const DateTime = ({ current, lat, lon, timezone }) => {
           <View style={styles.rightAlign}>
             <Text style={styles.timezone}>{timezone}</Text>
             <Text style={styles.latlong}>
-              {lat}N {lon}E
+              {lat} N / {lon} E
             </Text>
           </View>
         </View>
@@ -164,7 +164,8 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   latlong: {
-    marginLeft: 56,
+    marginTop: 2,
+    marginLeft: 47,
     fontSize: 16,
     color: 'white',
     fontWeight: '700',

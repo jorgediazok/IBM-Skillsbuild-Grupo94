@@ -23,17 +23,20 @@ export default function App() {
           <Stack.Screen
             name='Home'
             component={Home}
-            options={{ title: 'Clima Ahora' }}
+            options={{
+              title: 'Clima Ahora',
+              headerTintColor: '#142950',
+            }}
           />
           <Stack.Screen
             name='Search'
             component={ListCities}
-            options={{ title: 'Tus Ciudades' }}
+            options={{ title: 'Tus Ciudades', headerTintColor: '#142950' }}
           />
           <Stack.Screen
             name='Nosotros'
             component={Nosotros}
-            options={{ title: 'Quiénes Somos' }}
+            options={{ title: 'Quiénes Somos', headerTintColor: '#142950' }}
           />
         </Stack.Navigator>
       </NavigationContainer>

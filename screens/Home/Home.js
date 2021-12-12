@@ -36,7 +36,6 @@ const Home = ({ navigation }) => {
         .then((res) => res.json())
         .then((data) => {
           setDataDateTime(data);
-          console.log(data);
         });
     }
   };

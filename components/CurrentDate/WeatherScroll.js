@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, ScrollView, Image, Text, StyleSheet } from 'react-native';
 import moment from 'moment-timezone';
+import 'moment/locale/es';
 import FutureForecast from './FutureForecast';
 
 const WeatherScroll = ({ weatherData }) => {
@@ -26,7 +27,7 @@ const CurrentTempEl = ({ data }) => {
         <View style={styles.otherContainer}>
           <Text style={styles.day}>
             {moment(data.dt * 1000)
-              .locale('es-ES')
+              .locale('es')
               .format('dddd')}
           </Text>
           <Text style={styles.temp}>Día - {data.temp.day}&#176;C</Text>
@@ -81,7 +82,7 @@ const styles = StyleSheet.create({
     textTransform: 'capitalize',
   },
   otherContainer: {
-    paddingRight: 40,
+    paddingRight: 30,
   },
 });
 

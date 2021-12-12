@@ -33,7 +33,6 @@ const CityItem = ({
       const response = await fetch(API);
       if (response.status == 200) {
         const data = await response.json();
-        console.log(data);
         setWeatherData(data);
         setModalVisible(true);
       } else {
