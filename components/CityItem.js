@@ -183,6 +183,8 @@ const styles = StyleSheet.create({
   cityText: {
     maxWidth: '80%',
     fontWeight: 'bold',
+    color: '#142950',
+    fontSize: 16,
   },
   cityDelete: {
     width: 22,

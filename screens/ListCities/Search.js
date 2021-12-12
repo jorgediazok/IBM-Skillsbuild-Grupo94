@@ -43,9 +43,11 @@ const Search = () => {
 
       setNewCityText('');
     } catch (error) {
-      Alert.alert('Error.', 'La ciudad no existe.', [
-        { text: 'OK', onPress: () => console.log('OK Pressed') },
-      ]);
+      Alert.alert(
+        'Error',
+        'La ciudad no existe. Por favor agregue otra ciudad.',
+        [{ text: 'OK', onPress: () => console.log('OK Pressed') }]
+      );
       setNewCityText('');
     }
     setLoading(false);
@@ -170,7 +172,7 @@ const Search = () => {
         />
       </View>
 
-      <Text style={styles.title}>Tus Ciudades</Text>
+      <Text style={styles.title}>Lista de Ciudades</Text>
       {loading ? (
         <ActivityIndicator
           style={{ flex: 1, justifyContent: 'center' }}
@@ -195,14 +197,16 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 20,
-    fontWeight: 'bold',
     textAlign: 'center',
     marginTop: 30,
     zIndex: 300,
+    color: '#142950',
+    textDecorationLine: 'underline',
   },
   addedCities: {
     paddingTop: 30,
     paddingHorizontal: 20,
+    color: '#142950',
   },
   itemStyle: { padding: 15 },
   iconOne: {
@@ -219,7 +223,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 5,
     paddingLeft: 10,
-    borderColor: '#009688',
+    borderColor: '#142950',
     backgroundColor: 'white',
   },
   addButtonWrapper: {
