@@ -237,18 +237,21 @@ export default Search;
 
 //STYLES
 const styles = StyleSheet.create({
+  
   container: {
     padding: 10,
     flex: 1,
-    backgroundColor: '#E8EAED',
+    backgroundColor: '#3371ff',
   },
   title: {
     fontSize: 20,
     textAlign: 'center',
     marginTop: 30,
     zIndex: 300,
-    color: '#142950',
+    color: '#ffffff',
     textDecorationLine: 'underline',
+    fontFamily: 'Roboto',
+    fontWeight: 'bold'
   },
   addedCities: {
     paddingTop: 30,
