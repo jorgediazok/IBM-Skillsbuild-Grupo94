@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, ImageBackground, TouchableOpacity } from 'react-native';
+import { View, ImageBackground, TouchableOpacity, LogBox } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Styles from '../../components/Styles';
 import StylesButton from '../../components/SylesButton';
@@ -39,6 +39,8 @@ const Home = ({ navigation }) => {
         });
     }
   };
+
+  LogBox.ignoreAllLogs();
 
   return (
     <View style={Styles.container}>
