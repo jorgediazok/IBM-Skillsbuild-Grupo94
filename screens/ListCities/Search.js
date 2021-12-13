@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 //AXIOS
 import axios from 'axios';
 
@@ -15,6 +15,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import CityItem from '../../components/CityItem';
 import CityItemEmpty from '../../components/CityItemEmpty';
 import envs from '../../config/env';
+import firebase from '../../components/Utils/firebase';
 
 const Search = () => {
   const [loading, setLoading] = useState(false);
@@ -26,6 +27,22 @@ const Search = () => {
   const [selectedCity, setSelectedCity] = useState('');
   const { REACT_APP_WEATHER_API } = envs;
   const API_KEY = 'df9cb797703364f9c6cdde8025ca1416';
+
+
+
+
+
+  const [ciudades, setCiudades] = useState([]);
+
+  
+
+
+
+
+
+
+
+
   //ADDING A CITY TO THE LIST
   const handleAddCity = async () => {
     setLoading(true);
@@ -40,6 +57,12 @@ const Search = () => {
           lon: response.data.coord.lon,
         },
       });
+      await firebase.db.collection("ciudades").add({
+        nombre: response.data.name,
+        lat: response.data.coord.lat,
+        lon: response.data.coord.lon,
+      });
+
 
       setNewCityText('');
     } catch (error) {
@@ -53,9 +76,26 @@ const Search = () => {
     setLoading(false);
   };
 
+  useEffect(() => {
+    firebase.db.collection("ciudades").onSnapshot((querySnapshot) => {
+      const ciudades = [];
+      querySnapshot.docs.forEach((doc) => {
+        const { lat, lon, nombre } = doc.data();
+        ciudades.push({
+          id: doc.id,
+          nombre,
+          lat,
+          lon
+
+        });
+      });
+      setCiudades(ciudades);
+    });
+  }, []);
+
   //RENDERING
   const renderItems = () => {
-    if (cityItems.length === 0) {
+    if (ciudades.length === 0) {
       return <CityItemEmpty />;
     }
 
@@ -67,40 +107,47 @@ const Search = () => {
       return filteredCities
         .map((cityItem, index) => (
           <CityItem
-            city={cityItem}
+            city={cityItem.nombre}
             key={index}
-            lonCoords={locations[selectedCity]?.lon}
-            latCoords={locations[selectedCity]?.lat}
-            handleDelete={handleDelete}
-            index={index}
+            lonCoords={cityItem.lon}
+            latCoords={cityItem.lat}
+            handleDelete={deleteCiudad}
+            index={cityItem.id}
             setSelectedCity={setSelectedCity}
           />
         ))
         .reverse();
     }
 
-    return cityItems
-      .map((cityItem, index) => (
+
+
+
+    return ciudades.map((cityItem) => (
+ 
         <CityItem
-          city={cityItem}
-          key={index}
-          lonCoords={locations[selectedCity]?.lon}
-          latCoords={locations[selectedCity]?.lat}
-          handleDelete={handleDelete}
-          index={index}
+          city={cityItem.nombre}
+          key={cityItem.id}
+          lonCoords={cityItem.lon}
+          latCoords={cityItem.lat}
+          handleDelete={deleteCiudad}
+          index={cityItem.id}
           setSelectedCity={setSelectedCity}
         />
-      ))
-      .reverse();
-  };
+      
+    ))
 
+
+
+  };
+  
   //FILTERING CITIES
   const handleSearch = (text, index) => {
     if (text.length >= 2) {
       setFilteredCities(
-        cityItems.filter((city) => {
+        ciudades.filter((city) => {
+          var ciu=city.nombre;
           return (
-            city.charAt(index).toLowerCase() ===
+            ciu.charAt(index).toLowerCase() ===
             text.charAt(index).toLowerCase()
           );
         })
@@ -116,6 +163,15 @@ const Search = () => {
     let items = [...cityItems];
     items.splice(index, 1);
     setCityItems(items);
+  };
+
+  const deleteCiudad = async (index) => {
+    setLoading(true)
+    const dbRef = firebase.db
+      .collection("ciudades")
+      .doc(index);
+    await dbRef.delete();
+    setLoading(false)
   };
 
   return (
@@ -168,6 +224,7 @@ const Search = () => {
           placeholder='Buscar ciudad'
           value={search}
           underlineColorAndroid='transparent'
+          
           onChangeText={(text) => handleSearch(text)}
         />
       </View>

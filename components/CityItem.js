@@ -7,6 +7,8 @@ import Map from '../components/Map';
 import Weather from './Weather';
 const API_KEY = 'df9cb797703364f9c6cdde8025ca1416';
 
+import firebase from "../components/Utils/firebase";
+
 const CityItem = ({
   city,
   handleDelete,
@@ -17,7 +19,6 @@ const CityItem = ({
 }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [modalMapVisible, setModalMapVisible] = useState(false);
-  var alVisible = false;
   const [loaded, setLoaded] = useState(true);
 
   const selectCity = (city) => {
@@ -44,9 +45,7 @@ const CityItem = ({
     }
   }
 
-  function closeUp() {
-    alVisible = false;
-  }
+  
 
   if (weatherData != null) {
     const {
