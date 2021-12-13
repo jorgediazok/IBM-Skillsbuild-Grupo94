@@ -29,17 +29,7 @@ const Search = () => {
   const API_KEY = 'df9cb797703364f9c6cdde8025ca1416';
 
 
-
-
-
   const [ciudades, setCiudades] = useState([]);
-
-  
-
-
-
-
-
 
 
 
