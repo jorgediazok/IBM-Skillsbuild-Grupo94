@@ -10,6 +10,7 @@ import {
   Text,
   ActivityIndicator,
   Alert,
+  LogBox,
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import CityItem from '../../components/CityItem';
@@ -28,10 +29,7 @@ const Search = () => {
   const { REACT_APP_WEATHER_API } = envs;
   const API_KEY = 'df9cb797703364f9c6cdde8025ca1416';
 
-
   const [ciudades, setCiudades] = useState([]);
-
-
 
   //ADDING A CITY TO THE LIST
   const handleAddCity = async () => {
@@ -47,12 +45,12 @@ const Search = () => {
           lon: response.data.coord.lon,
         },
       });
-      await firebase.db.collection("ciudades").add({
+      await firebase.db.collection('ciudades').add({
         nombre: response.data.name,
         lat: response.data.coord.lat,
         lon: response.data.coord.lon,
+        timestamp: firebase.firebase.firestore.FieldValue.serverTimestamp(),
       });
-
 
       setNewCityText('');
     } catch (error) {
@@ -67,20 +65,22 @@ const Search = () => {
   };
 
   useEffect(() => {
-    firebase.db.collection("ciudades").onSnapshot((querySnapshot) => {
-      const ciudades = [];
-      querySnapshot.docs.forEach((doc) => {
-        const { lat, lon, nombre } = doc.data();
-        ciudades.push({
-          id: doc.id,
-          nombre,
-          lat,
-          lon
-
+    firebase.db
+      .collection('ciudades')
+      .orderBy('timestamp', 'desc')
+      .onSnapshot((querySnapshot) => {
+        const ciudades = [];
+        querySnapshot.docs.forEach((doc) => {
+          const { lat, lon, nombre } = doc.data();
+          ciudades.push({
+            id: doc.id,
+            nombre,
+            lat,
+            lon,
+          });
         });
+        setCiudades(ciudades);
       });
-      setCiudades(ciudades);
-    });
   }, []);
 
   //RENDERING
@@ -94,51 +94,40 @@ const Search = () => {
     }
 
     if (filteredCities && filteredCities.length > 0) {
-      return filteredCities
-        .map((cityItem, index) => (
-          <CityItem
-            city={cityItem.nombre}
-            key={index}
-            lonCoords={cityItem.lon}
-            latCoords={cityItem.lat}
-            handleDelete={deleteCiudad}
-            index={cityItem.id}
-            setSelectedCity={setSelectedCity}
-          />
-        ))
-        .reverse();
-    }
-
-
-
-
-    return ciudades.map((cityItem) => (
- 
+      return filteredCities.map((cityItem, index) => (
         <CityItem
           city={cityItem.nombre}
-          key={cityItem.id}
+          key={index}
           lonCoords={cityItem.lon}
           latCoords={cityItem.lat}
           handleDelete={deleteCiudad}
           index={cityItem.id}
           setSelectedCity={setSelectedCity}
         />
-      
-    ))
+      ));
+    }
 
-
-
+    return ciudades.map((cityItem) => (
+      <CityItem
+        city={cityItem.nombre}
+        key={cityItem.id}
+        lonCoords={cityItem.lon}
+        latCoords={cityItem.lat}
+        handleDelete={deleteCiudad}
+        index={cityItem.id}
+        setSelectedCity={setSelectedCity}
+      />
+    ));
   };
-  
+
   //FILTERING CITIES
   const handleSearch = (text, index) => {
     if (text.length >= 2) {
       setFilteredCities(
         ciudades.filter((city) => {
-          var ciu=city.nombre;
+          var ciu = city.nombre;
           return (
-            ciu.charAt(index).toLowerCase() ===
-            text.charAt(index).toLowerCase()
+            ciu.charAt(index).toLowerCase() === text.charAt(index).toLowerCase()
           );
         })
       );
@@ -156,13 +145,13 @@ const Search = () => {
   };
 
   const deleteCiudad = async (index) => {
-    setLoading(true)
-    const dbRef = firebase.db
-      .collection("ciudades")
-      .doc(index);
+    setLoading(true);
+    const dbRef = firebase.db.collection('ciudades').doc(index);
     await dbRef.delete();
-    setLoading(false)
+    setLoading(false);
   };
+
+  LogBox.ignoreAllLogs();
 
   return (
     <View style={styles.container}>
@@ -214,7 +203,6 @@ const Search = () => {
           placeholder='Buscar ciudad'
           value={search}
           underlineColorAndroid='transparent'
-          
           onChangeText={(text) => handleSearch(text)}
         />
       </View>
@@ -237,11 +225,10 @@ export default Search;
 
 //STYLES
 const styles = StyleSheet.create({
-  
   container: {
     padding: 10,
     flex: 1,
-    backgroundColor: '#3371ff',
+    backgroundColor: '#142950',
   },
   title: {
     fontSize: 20,
@@ -251,7 +238,7 @@ const styles = StyleSheet.create({
     color: '#ffffff',
     textDecorationLine: 'underline',
     fontFamily: 'Roboto',
-    fontWeight: 'bold'
+    fontWeight: 'bold',
   },
   addedCities: {
     paddingTop: 30,
